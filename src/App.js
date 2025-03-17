@@ -8,7 +8,7 @@ function App() {
   const [duration, setDuration] = useState(0);
   const [currentStory, setCurrentStory] = useState(null);
   const [upNext, setUpNext] = useState('Up Next: -');
-  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
   const stories = [
     { id: 'george_camp', title: 'Путешествие в лагерь', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3', cover: '#E5989B' },
@@ -35,7 +35,7 @@ function App() {
     updateUpNext();
     audio.play();
     setIsPlaying(true);
-    setIsPlayerMinimized(false);
+    setIsPlayerOpen(true);
   };
 
   const togglePlay = () => {
@@ -69,20 +69,12 @@ function App() {
     return `${mins}:${secs < 10 ? '0' + secs : secs}`;
   };
 
-  const minimizePlayer = () => {
-    setIsPlayerMinimized(true);
-  };
-
-  const maximizePlayer = () => {
-    setIsPlayerMinimized(false);
-  };
-
-  const stopPlaying = () => {
+  const closePlayer = () => {
     const audio = audioRef.current;
     audio.pause();
     setIsPlaying(false);
     setCurrentStory(null);
-    setIsPlayerMinimized(false);
+    setIsPlayerOpen(false);
   };
 
   return (
@@ -110,7 +102,8 @@ function App() {
                 </button>
               </div>
             ))}
-            {/* Добавим фейковый контент для проверки скролла */}
+            {/* Фейковый контент для скролла */}
+            <div className="h-40"></div>
             <div className="h-40"></div>
           </div>
         ) : (
@@ -136,27 +129,12 @@ function App() {
       </div>
 
       {/* Полноэкранный плеер */}
-      {currentStory && !isPlayerMinimized && (
-        <div className="fixed inset-0 bg-[#44318D] flex flex-col items-center justify-center p-6 z-50">
-          <div className="player-circle relative mb-6">
-            <svg className="progress-circle" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" stroke="#FFBF69" strokeWidth="5" fill="none" opacity="0.3" />
-              <circle
-                cx="50"
-                cy="50"
-                r="45"
-                stroke="#FFBF69"
-                strokeWidth="5"
-                fill="none"
-                strokeDasharray="283"
-                strokeDashoffset={283 - (283 * (currentTime / duration || 0))}
-                style={{ transition: 'stroke-dashoffset 0.1s linear' }}
-              />
-            </svg>
-            <div className="player-title text-center absolute inset-0 flex items-center justify-center">{currentStory.title}</div>
-          </div>
-          <p className="text-sm text-gray-300 mb-4">By: {currentStory.author}</p>
-          <div className="player-controls flex justify-center gap-4 mb-4">
+      {isPlayerOpen && currentStory && (
+        <div className="fixed inset-0 bg-[#2A1B3D] flex flex-col items-center justify-center p-6 z-50">
+          <div className="player-cover mb-6" style={{ backgroundColor: currentStory.cover, width: '200px', height: '200px', borderRadius: '16px' }}></div>
+          <h2 className="text-xl font-bold mb-2">{currentStory.title}</h2>
+          <p className="text-sm text-gray-400 mb-4">By: {currentStory.author}</p>
+          <div className="player-controls flex justify-center gap-6 mb-4">
             <button className="player-button" onClick={prevStory}>
               <svg width="24" height="24" fill="none" stroke="#FFBF69" strokeWidth="2">
                 <polygon points="19 20 9 12 19 4 19 20"/>
@@ -182,57 +160,23 @@ function App() {
               </svg>
             </button>
           </div>
-          <div className="time mt-2 flex justify-between text-sm text-gray-300 w-full max-w-md">
+          <div className="time flex justify-between text-sm text-gray-300 w-full max-w-md mb-4">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
           </div>
+          <div className="progress-bar w-full max-w-md h-1 bg-gray-600 rounded-full">
+            <div
+              className="progress h-1 bg-[#FFBF69] rounded-full"
+              style={{ width: `${(currentTime / duration) * 100 || 0}%`, transition: 'width 0.1s linear' }}
+            ></div>
+          </div>
           <div className="up-next mt-2 text-sm text-gray-400 text-center">{upNext}</div>
-          <button className="mt-6 text-gray-300 text-sm" onClick={minimizePlayer}>Свернуть</button>
-          <button className="mt-2 text-gray-300 text-sm" onClick={stopPlaying}>Остановить</button>
+          <button className="mt-6 text-gray-300 text-sm" onClick={closePlayer}>Закрыть</button>
         </div>
       )}
 
-      {/* Мини-плеер */}
-      {currentStory && isPlayerMinimized && (
-        <div className="fixed bottom-16 left-0 right-0 bg-[#2A1B3D] p-3 flex items-center justify-between z-50">
-          <div className="flex items-center">
-            <div className="mini-player-cover mr-3" style={{ backgroundColor: currentStory.cover }}></div>
-            <div>
-              <div className="text-sm font-semibold">{currentStory.title}</div>
-              <div className="text-xs text-gray-400">By: {currentStory.author}</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="player-button" onClick={togglePlay}>
-              {isPlaying ? (
-                <svg width="20" height="20" fill="#FFBF69">
-                  <rect x="6" y="4" width="4" height="12"/>
-                  <rect x="12" y="4" width="4" height="12"/>
-                </svg>
-              ) : (
-                <svg width="20" height="20" fill="#FFBF69">
-                  <polygon points="5 3 17 10 5 17 5 3"/>
-                </svg>
-              )}
-            </button>
-            <button className="player-button" onClick={nextStory}>
-              <svg width="20" height="20" fill="none" stroke="#FFBF69" strokeWidth="2">
-                <polygon points="5 4 15 12 5 20 5 4"/>
-                <line x1="19" y1="4" x2="19" y2="20"/>
-              </svg>
-            </button>
-            <button className="player-button" onClick={maximizePlayer}>
-              <svg width="20" height="20" fill="#FFBF69" viewBox="0 0 24 24">
-                <path d="M4 4h16v16H4z" fill="none" stroke="currentColor" strokeWidth="2"/>
-                <path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Вкладки */}
-      <div className="tab-buttons flex justify-around bg-[#2A1B3D] p-2">
+      {/* Вкладки (подняты выше) */}
+      <div className="tab-buttons fixed top-1/4 left-0 right-0 flex justify-around bg-[#2A1B3D] p-2 rounded-xl shadow-lg z-10">
         <button
           className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'today' ? 'bg-[#44318D] text-white' : 'text-gray-400'}`}
           onClick={() => setActiveTab('today')}
