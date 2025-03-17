@@ -8,9 +8,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  border-radius: 16px;
+  padding: 12px;
+  border-radius: 12px;
   transition: transform 0.3s ease;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .story-card:hover {
@@ -24,20 +26,10 @@ body {
 }
 
 /* Плеер */
-.player {
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
-  margin: 20px auto;
-  background: #44318D;
-  position: relative;
-}
-
 .player-circle {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   margin: 0 auto;
 }
 
@@ -48,7 +40,7 @@ body {
 }
 
 .player-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: white;
 }
