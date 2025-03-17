@@ -10,9 +10,9 @@ function App() {
   const [upNext, setUpNext] = useState('Up Next: -');
 
   const stories = [
-    { id: 'george_camp', title: 'Рассказ Джорджа - Путешествие в лагерь', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3' },
-    { id: 'george_eliza', title: 'Рассказ Джорджа - Элиза', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Элиза.mp3' },
-    { id: 'mila_dream', title: 'Рассказ Милы - Маленькая мечта', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Милы - Маленькая мечта.mp3' },
+    { id: 'george_camp', title: 'Путешествие в лагерь', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3', color: '#FF6F61' },
+    { id: 'george_eliza', title: 'Элиза', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Элиза.mp3', color: '#FF9F1C' },
+    { id: 'mila_dream', title: 'Маленькая мечта', author: 'Мила', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Милы - Маленькая мечта.mp3', color: '#FFBF69' },
   ];
 
   const audioRef = React.useRef(null);
@@ -68,82 +68,104 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-[#2A1B3D] to-[#44318D] text-white">
       <div className="flex-1 overflow-y-auto p-4">
         {activeTab === 'today' ? (
           <div className="max-w-md mx-auto">
-            <h1 className="text-2xl mb-6 mt-20 text-center">Сказки для сна</h1>
+            <h1 className="text-3xl font-bold mb-6 mt-10 text-center">Сказки для сна</h1>
             {stories.map((story) => (
-              <button
+              <div
                 key={story.id}
-                className="story-button block w-full mb-4 p-4 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+                className="story-card flex items-center mb-4 p-4 rounded-2xl cursor-pointer transition-all hover:scale-105"
+                style={{ backgroundColor: story.color }}
                 onClick={() => playStory(story.id)}
               >
-                {story.title}
-              </button>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold">{story.title}</h3>
+                  <p className="text-sm text-gray-200">By: {story.author}</p>
+                </div>
+                <button className="play-icon">
+                  <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                </button>
+              </div>
             ))}
             <div className="player mt-6">
-              <div className="player-title" id="current-story">{currentStory}</div>
+              <div className="player-circle relative">
+                <svg className="progress-circle" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="45" stroke="#FFBF69" strokeWidth="5" fill="none" opacity="0.3" />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    stroke="#FFBF69"
+                    strokeWidth="5"
+                    fill="none"
+                    strokeDasharray="283"
+                    strokeDashoffset={283 - (283 * (currentTime / duration || 0))}
+                    style={{ transition: 'stroke-dashoffset 0.1s linear' }}
+                  />
+                </svg>
+                <div className="player-title text-center absolute inset-0 flex items-center justify-center">{currentStory}</div>
+              </div>
               <div className="player-controls flex justify-center gap-4 mt-4">
                 <button className="player-button" onClick={prevStory}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <svg width="24" height="24" fill="none" stroke="#FFBF69" strokeWidth="2">
                     <polygon points="19 20 9 12 19 4 19 20"/>
                     <line x1="5" y1="4" x2="5" y2="20"/>
                   </svg>
                 </button>
                 <button className="player-button play-button" onClick={togglePlay}>
                   {isPlaying ? (
-                    <svg id="pause-icon" viewBox="0 0 24 24" fill="white">
+                    <svg width="32" height="32" fill="#FFBF69">
                       <rect x="6" y="4" width="4" height="16"/>
                       <rect x="14" y="4" width="4" height="16"/>
                     </svg>
                   ) : (
-                    <svg id="play-icon" viewBox="0 0 24 24" fill="white">
+                    <svg width="32" height="32" fill="#FFBF69">
                       <polygon points="5 3 19 12 5 21 5 3"/>
                     </svg>
                   )}
                 </button>
                 <button className="player-button" onClick={nextStory}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <svg width="24" height="24" fill="none" stroke="#FFBF69" strokeWidth="2">
                     <polygon points="5 4 15 12 5 20 5 4"/>
                     <line x1="19" y1="4" x2="19" y2="20"/>
                   </svg>
                 </button>
               </div>
-              <div className="progress-bar mt-2">
-                <div className="progress" style={{ width: `${(currentTime / duration) * 100 || 0}%` }}></div>
-              </div>
-              <div className="time mt-2 flex justify-between text-sm">
+              <div className="time mt-2 flex justify-between text-sm text-gray-300">
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
-              <div className="up-next mt-2 text-sm text-gray-400">{upNext}</div>
+              <div className="up-next mt-2 text-sm text-gray-400 text-center">{upNext}</div>
             </div>
           </div>
         ) : (
           <div className="max-w-md mx-auto">
-            <h1 className="text-2xl mb-6 mt-20 text-center">Спокойный сон — без усилий</h1>
-            <p className="text-gray-400 mb-4 text-center">Премиум-доступ к боту Мане — это не просто сказки, а ваш инструмент для лёгкого засыпания, глубокого сна и спокойного утра.</p>
-            <h2 className="text-xl mb-4 text-center">🎯 Что вы получите?</h2>
+            <h1 className="text-2xl font-bold mb-6 mt-20 text-center">Спокойный сон — без усилий</h1>
+            <p className="text-gray-300 mb-4 text-center">Премиум-доступ к боту Мане — это не просто сказки, а ваш инструмент для лёгкого засыпания, глубокого сна и спокойного утра.</p>
+            <h2 className="text-xl font-semibold mb-4 text-center">🎯 Что вы получите?</h2>
             <ul className="list-disc list-inside text-gray-300 mb-6 text-center">
               <li>Подготовитесь к лучшему отдыху благодаря уникальным историям с эффектом медитации, озвученным известными голосами</li>
               <li>Проследите за вашим настроением, каждый вечер, перед сном</li>
               <li>А еще - создание и озвучка персональных историй по запросу, превращая ваши мечты в реальность!</li>
             </ul>
-            <h2 className="text-xl mb-4 text-center">🌟 Тарифы на выбор:</h2>
+            <h2 className="text-xl font-semibold mb-4 text-center">🌟 Тарифы на выбор:</h2>
             <ul className="list-disc list-inside text-gray-300 mb-4 text-center">
-             <li>На 30 дней - 450 рублей</li>
-             <li>На 365 дней + 30 дней бесплатно 🎁 - 3600 рублей<br />Экономия 39%! Это всего 276 рублей в месяц! Дешевле капучинки</li>
+              <li>На 30 дней - 450 рублей</li>
+              <li>На 365 дней + 30 дней бесплатно 🎁 - 3600 рублей<br />Экономия 39%! Это всего 276 рублей в месяц! Дешевле капучинки</li>
             </ul>
-            <button className="catalog-button block w-4/5 mx-auto mt-4 p-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800">
+            <button className="catalog-button block w-4/5 mx-auto mt-4 p-3 bg-[#FFBF69] text-[#2A1B3D] rounded-lg hover:bg-[#FF9F1C] font-semibold">
               Каталог
             </button>
           </div>
         )}
       </div>
-      <div className="tab-buttons flex justify-around bg-gray-800 p-2">
+      <div className="tab-buttons flex justify-around bg-[#2A1B3D] p-2">
         <button
-          className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'today' ? 'bg-gray-700 text-white' : 'text-gray-400'}`}
+          className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'today' ? 'bg-[#44318D] text-white' : 'text-gray-400'}`}
           onClick={() => setActiveTab('today')}
         >
           <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -152,7 +174,7 @@ function App() {
           Сегодня
         </button>
         <button
-          className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'sleep' ? 'bg-gray-700 text-white' : 'text-gray-400'}`}
+          className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'sleep' ? 'bg-[#44318D] text-white' : 'text-gray-400'}`}
           onClick={() => setActiveTab('sleep')}
         >
           <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
