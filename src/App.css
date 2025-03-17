@@ -1,6 +1,7 @@
 /* Общий стиль */
 body {
   font-family: 'Inter', sans-serif;
+  background-color: #121212;
 }
 
 /* Карточки сказок */
@@ -10,20 +11,26 @@ body {
   justify-content: space-between;
   padding: 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #282828;
   transition: background 0.3s ease;
   max-width: 360px;
   margin: 0 auto;
 }
 
 .story-card:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #383838;
 }
 
 .story-cover {
   width: 60px;
   height: 60px;
   border-radius: 8px;
+}
+
+.play-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 /* Плеер */
@@ -76,6 +83,13 @@ body {
   margin-top: 10px;
 }
 
+/* Мини-плеер */
+.mini-player-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
 /* Кнопка каталога */
 .catalog-button {
   display: block;
@@ -95,13 +109,12 @@ body {
   justify-content: space-around;
   padding: 10px 0;
   position: fixed;
-  top: 25%; /* Поднятие меню выше */
+  bottom: 0;
   left: 0;
   right: 0;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
-  background-color: #2A1B3D; /* Непрозрачный фон */
-  border-radius: 12px;
+  background-color: #121212;
 }
 
 .tab-button {
