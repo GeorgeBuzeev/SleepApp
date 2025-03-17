@@ -10,13 +10,20 @@ body {
   justify-content: space-between;
   padding: 12px;
   border-radius: 12px;
-  transition: transform 0.3s ease;
-  max-width: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+  max-width: 360px;
   margin: 0 auto;
 }
 
 .story-card:hover {
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.story-cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
 }
 
 .play-icon {
@@ -76,6 +83,13 @@ body {
   margin-top: 10px;
 }
 
+/* Мини-плеер */
+.mini-player-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
 /* Кнопка каталога */
 .catalog-button {
   display: block;
@@ -100,6 +114,7 @@ body {
   right: 0;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
+  opacity: 1; /* Непрозрачность */
 }
 
 .tab-button {

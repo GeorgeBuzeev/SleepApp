@@ -11,9 +11,9 @@ function App() {
   const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
 
   const stories = [
-    { id: 'george_camp', title: 'Путешествие в лагерь', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3', color: '#E5989B' },
-    { id: 'george_eliza', title: 'Элиза', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Элиза.mp3', color: '#F4A261' },
-    { id: 'mila_dream', title: 'Маленькая мечта', author: 'Мила', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Милы - Маленькая мечта.mp3', color: '#F4C4A1' },
+    { id: 'george_camp', title: 'Путешествие в лагерь', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3', cover: '#E5989B' },
+    { id: 'george_eliza', title: 'Элиза', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Элиза.mp3', cover: '#F4A261' },
+    { id: 'mila_dream', title: 'Маленькая мечта', author: 'Мила', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Милы - Маленькая мечта.mp3', cover: '#F4C4A1' },
   ];
 
   const audioRef = React.useRef(null);
@@ -88,20 +88,20 @@ function App() {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-[#2A1B3D] to-[#44318D] text-white">
       {/* Основной контент */}
-      <div className="flex-1 overflow-y-auto p-6 pb-20">
+      <div className="flex-1 overflow-y-auto p-6 pb-24">
         {activeTab === 'today' ? (
           <div className="max-w-md mx-auto">
             <h1 className="text-3xl font-bold mb-8 text-center">Сказки для сна</h1>
             {stories.map((story) => (
               <div
                 key={story.id}
-                className="story-card flex items-center mb-4 p-3 rounded-xl cursor-pointer transition-all hover:scale-105"
-                style={{ backgroundColor: story.color }}
+                className="story-card flex items-center mb-4 p-3 rounded-xl cursor-pointer transition-all hover:bg-opacity-80"
                 onClick={() => playStory(story.id)}
               >
-baş                <div className="flex-1">
+                <div className="story-cover mr-4" style={{ backgroundColor: story.cover }}></div>
+                <div className="flex-1">
                   <h3 className="text-md font-semibold">{story.title}</h3>
-                  <p className="text-xs text-gray-200">By: {story.author}</p>
+                  <p className="text-xs text-gray-400">By: {story.author}</p>
                 </div>
                 <button className="play-icon">
                   <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
@@ -110,6 +110,8 @@ baş                <div className="flex-1">
                 </button>
               </div>
             ))}
+            {/* Добавим фейковый контент для проверки скролла */}
+            <div className="h-40"></div>
           </div>
         ) : (
           <div className="max-w-md mx-auto">
@@ -192,10 +194,13 @@ baş                <div className="flex-1">
 
       {/* Мини-плеер */}
       {currentStory && isPlayerMinimized && (
-        <div className="fixed bottom-16 left-0 right-0 bg-[#44318D] p-3 flex items-center justify-between z-50">
+        <div className="fixed bottom-16 left-0 right-0 bg-[#2A1B3D] p-3 flex items-center justify-between z-50">
           <div className="flex items-center">
-            <div className="text-sm font-semibold mr-2">{currentStory.title}</div>
-            <div className="text-xs text-gray-300">By: {currentStory.author}</div>
+            <div className="mini-player-cover mr-3" style={{ backgroundColor: currentStory.cover }}></div>
+            <div>
+              <div className="text-sm font-semibold">{currentStory.title}</div>
+              <div className="text-xs text-gray-400">By: {currentStory.author}</div>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button className="player-button" onClick={togglePlay}>
@@ -210,15 +215,16 @@ baş                <div className="flex-1">
                 </svg>
               )}
             </button>
+            <button className="player-button" onClick={nextStory}>
+              <svg width="20" height="20" fill="none" stroke="#FFBF69" strokeWidth="2">
+                <polygon points="5 4 15 12 5 20 5 4"/>
+                <line x1="19" y1="4" x2="19" y2="20"/>
+              </svg>
+            </button>
             <button className="player-button" onClick={maximizePlayer}>
               <svg width="20" height="20" fill="#FFBF69" viewBox="0 0 24 24">
                 <path d="M4 4h16v16H4z" fill="none" stroke="currentColor" strokeWidth="2"/>
                 <path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-            </button>
-            <button className="player-button" onClick={stopPlaying}>
-              <svg width="20" height="20" fill="#FFBF69" viewBox="0 0 24 24">
-                <path d="M6 6h12v12H6z" fill="currentColor"/>
               </svg>
             </button>
           </div>
@@ -231,18 +237,14 @@ baş                <div className="flex-1">
           className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'today' ? 'bg-[#44318D] text-white' : 'text-gray-400'}`}
           onClick={() => setActiveTab('today')}
         >
-          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-          </svg>
+          <span className="text-lg">🕒</span>
           Сегодня
         </button>
         <button
           className={`tab-button flex flex-col items-center p-2 rounded-lg ${activeTab === 'sleep' ? 'bg-[#44318D] text-white' : 'text-gray-400'}`}
           onClick={() => setActiveTab('sleep')}
         >
-          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-          </svg>
+          <span className="text-lg">🌙</span>
           Сон
         </button>
       </div>
