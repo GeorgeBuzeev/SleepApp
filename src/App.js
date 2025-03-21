@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlay, FaPause, FaSun, FaCloudMoon, FaArrowDown, FaArrowUp, FaUser } from 'react-icons/fa'; // Импортируем иконки для интерфейса
+import { FaPlay, FaPause, FaSun, FaCloudMoon, FaArrowDown, FaArrowUp, FaUser } from 'react-icons/fa';
 import './App.css';
 
 function App() {
-  // Состояния приложения
   const [activeTab, setActiveTab] = useState('today');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -11,28 +10,46 @@ function App() {
   const [currentStory, setCurrentStory] = useState(null);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isTherapyModalOpen, setIsTherapyModalOpen] = useState(false); // Состояние для модального окна
+  const [isTherapyModalOpen, setIsTherapyModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false); // Состояние для модального окна оплаты
+  const [hasSubscription, setHasSubscription] = useState(false); // Состояние подписки
+  const [subscriptionEnd, setSubscriptionEnd] = useState(null); // Дата окончания подписки
 
-  // Массив с данными о треках
   const stories = [
     { id: 'george_camp', title: 'Путешествие в лагерь', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3', coverGradient: 'linear-gradient(135deg, #F5C563, #E5989B)' },
     { id: 'george_eliza', title: 'Элиза', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Элиза.mp3', coverGradient: 'linear-gradient(135deg, #F28C38, #F5C563)' },
     { id: 'mila_dream', title: 'Маленькая мечта', author: 'Мила', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Милы - Маленькая мечта.mp3', coverGradient: 'linear-gradient(135deg, #E5989B, #F28C38)' },
   ];
 
-  // Ссылка на элемент аудио для управления воспроизведением
   const audioRef = React.useRef(null);
 
-  // Эффект для инициализации Telegram Mini App
+  // Получаем Telegram ID пользователя
+  const [userId, setUserId] = useState(null);
   useEffect(() => {
     if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.ready(); // Готовим Telegram Web App
-      window.Telegram.WebApp.expand(); // Расширяем окно приложения
-      setTimeout(() => window.Telegram.WebApp.expand(), 100); // Повторяем расширение для надёжности
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+      setTimeout(() => window.Telegram.WebApp.expand(), 100);
+      const user = window.Telegram.WebApp.initDataUnsafe.user;
+      if (user) {
+        setUserId(user.id);
+        checkSubscription(user.id); // Проверяем статус подписки при загрузке
+      }
     }
   }, []);
 
-  // Функция для воспроизведения выбранного трека
+  // Функция для проверки статуса подписки
+  const checkSubscription = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/check-subscription?user_id=${userId}`);
+      const data = await response.json();
+      setHasSubscription(data.has_subscription);
+      setSubscriptionEnd(data.subscription_end);
+    } catch (error) {
+      console.error('Ошибка при проверке подписки:', error);
+    }
+  };
+
   const playStory = (storyId) => {
     const story = stories.find(s => s.id === storyId);
     if (story) {
@@ -46,7 +63,6 @@ function App() {
     }
   };
 
-  // Функция для переключения между паузой и воспроизведением
   const togglePlay = () => {
     const audio = audioRef.current;
     if (isPlaying) {
@@ -57,7 +73,6 @@ function App() {
     setIsPlaying(!isPlaying);
   };
 
-  // Функция для перехода к предыдущему треку
   const playPrevious = () => {
     if (currentStory) {
       const currentIndex = stories.findIndex(s => s.id === currentStory.id);
@@ -66,7 +81,6 @@ function App() {
     }
   };
 
-  // Функция для перехода к следующему треку
   const playNext = () => {
     if (currentStory) {
       const currentIndex = stories.findIndex(s => s.id === currentStory.id);
@@ -75,17 +89,14 @@ function App() {
     }
   };
 
-  // Функция для сворачивания плеера
   const minimizePlayer = () => {
     setIsMinimized(true);
   };
 
-  // Функция для разворачивания плеера
   const maximizePlayer = () => {
     setIsMinimized(false);
   };
 
-  // Функция для закрытия плеера
   const closePlayer = () => {
     const audio = audioRef.current;
     audio.pause();
@@ -95,26 +106,68 @@ function App() {
     setIsMinimized(false);
   };
 
-  // Функция форматирования времени
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? '0' + secs : secs}`;
   };
 
-  // Функция для открытия модального окна
   const openTherapyModal = () => {
     setIsTherapyModalOpen(true);
   };
 
-  // Функция для закрытия модального окна
   const closeTherapyModal = () => {
     setIsTherapyModalOpen(false);
   };
 
+  const openPaymentModal = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+  const closePaymentModal = () => {
+    setIsPaymentModalOpen(false);
+  };
+
+  // Функция для создания платежа
+  const handlePayment = async (plan) => {
+    try {
+      const response = await fetch('http://localhost:5000/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          plan: plan, // "30days" или "365days"
+        }),
+      });
+      const data = await response.json();
+      if (data.confirmation_url) {
+        // Перенаправляем пользователя на страницу оплаты
+        window.location.href = data.confirmation_url;
+      } else {
+        alert('Ошибка при создании платежа. Попробуйте снова.');
+      }
+    } catch (error) {
+      console.error('Ошибка при создании платежа:', error);
+      alert('Произошла ошибка. Попробуйте снова.');
+    }
+  };
+
+  // Периодическая проверка статуса подписки после оплаты
+  useEffect(() => {
+    if (isPaymentModalOpen) {
+      const interval = setInterval(() => {
+        if (userId) {
+          checkSubscription(userId);
+        }
+      }, 5000); // Проверяем каждые 5 секунд
+      return () => clearInterval(interval);
+    }
+  }, [isPaymentModalOpen, userId]);
+
   return (
     <div className="app-container">
-      {/* Основной контейнер для контента */}
       <div className="content-container">
         {activeTab === 'today' ? (
           <div className="main-content">
@@ -139,18 +192,22 @@ function App() {
           </div>
         ) : activeTab === 'sleep' ? (
           <div className="main-content">
-            {/* Шапка с декоративным фоном */}
             <div className="header-image">
               <h1 className="header-title">Рассказы для сна</h1>
             </div>
-            {/* Кнопки */}
             <div className="button-container">
               <button className="sleep-button" onClick={openTherapyModal}>
                 О сказкотерапии
               </button>
-              <button className="sleep-button">
-                Полный доступ
-              </button>
+              {hasSubscription ? (
+                <div className="subscription-info">
+                  <p>Ваш доступ активен до {subscriptionEnd}</p>
+                </div>
+              ) : (
+                <button className="sleep-button" onClick={openPaymentModal}>
+                  Полный доступ
+                </button>
+              )}
             </div>
           </div>
         ) : (
@@ -212,6 +269,45 @@ function App() {
               <p>Сказки перед сном — это не просто способ расслабиться, но и мощный инструмент для улучшения качества жизни. Они помогают справляться со стрессом, укрепляют умственные способности и дарят эмоциональное облегчение.</p>
               <p>Добавьте сказки в свой вечерний ритуал, чтобы каждый день завершался на волшебной ноте. Кто знает, возможно, этот простой ритуал станет вашим любимым способом заботы о себе?</p>
               <p>Если же проблемы со сном продолжаются, попробуйте воспользоваться телеграм-ботом "Маня". Она поможет расслабиться и быстрее заснуть!</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Модальное окно для оплаты */}
+      {isPaymentModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2 className="modal-title">Полный доступ</h2>
+              <button className="modal-close-button" onClick={closePaymentModal}>
+                Закрыть
+              </button>
+            </div>
+            <div className="modal-body">
+              <h3>Спокойный сон — без усилий</h3>
+              <p>Премиум-доступ к боту Мане — это не просто сказки, а ваш инструмент для лёгкого засыпания, глубокого сна и спокойного утра.</p>
+              <h4>Что вы получите?</h4>
+              <ul>
+                <li>Подготовитесь к лучшему отдыху благодаря уникальным историям с эффектом медитации, озвученным известными голосами.</li>
+                <li>Проследите за вашим настроением, каждый вечер, перед сном.</li>
+                <li>Создание и озвучка персональных историй по запросу, превращая ваши мечты в реальность!</li>
+              </ul>
+              <h4>Тарифы на выбор:</h4>
+              <div className="payment-options">
+                <button
+                  className="payment-button"
+                  onClick={() => handlePayment('30days')}
+                >
+                  30 дней — 450 рублей
+                </button>
+                <button
+                  className="payment-button"
+                  onClick={() => handlePayment('365days')}
+                >
+                  365 дней + 30 дней бесплатно — 3600 рублей
+                </button>
+              </div>
+              <p>Это разовый доступ, а не подписка. Автопродление отключено.</p>
             </div>
           </div>
         </div>
@@ -280,7 +376,6 @@ function App() {
         </div>
       )}
 
-      {/* Нижняя навигация */}
       <div className="nav-bar">
         <button
           className={`nav-button ${activeTab === 'today' ? 'active' : ''}`}

@@ -496,3 +496,34 @@
 .spacer {
   height: 80px;
 }
+
+/* Стили для модального окна оплаты */
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.payment-button {
+  background-color: #F5C563;
+  color: #1A1F36;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.payment-button:hover {
+  background-color: #E5B553;
+}
+
+.subscription-info {
+  text-align: center;
+  color: #B0B3C1;
+  font-size: 14px;
+  margin-top: 12px;
+}
