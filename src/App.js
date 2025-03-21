@@ -19,7 +19,7 @@ function App() {
   // isMinimized: Указывает, свёрнут ли плеер в мини-версию
   const [isMinimized, setIsMinimized] = useState(false);
   // userName: Хранит имя пользователя из Telegram
-  const [userName, setUserName] = useState('Пользователь');
+  const [userName, setUserName] = useState('Гость'); // Запасное имя, если Telegram не вернёт данные
 
   // Массив с данными о треках
   const stories = [
@@ -40,9 +40,14 @@ function App() {
 
       // Получаем данные пользователя из Telegram
       const user = window.Telegram.WebApp.initDataUnsafe?.user;
+      console.log('Telegram User Data:', user); // Отладка: выводим данные пользователя в консоль
       if (user && user.first_name) {
         setUserName(user.first_name); // Устанавливаем имя пользователя
+      } else {
+        console.warn('Не удалось получить имя пользователя из Telegram, используется запасное имя "Гость"');
       }
+    } else {
+      console.warn('Telegram Web App API недоступен, используется запасное имя "Гость"');
     }
   }, []);
 
