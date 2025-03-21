@@ -4,22 +4,14 @@ import './App.css';
 
 function App() {
   // Состояния приложения
-  // activeTab: Определяет, какая вкладка активна ("today", "sleep" или "profile")
   const [activeTab, setActiveTab] = useState('today');
-  // isPlaying: Указывает, воспроизводится ли трек в данный момент
   const [isPlaying, setIsPlaying] = useState(false);
-  // currentTime: Текущее время воспроизведения трека в секундах
   const [currentTime, setCurrentTime] = useState(0);
-  // duration: Общая длительность трека в секундах
   const [duration, setDuration] = useState(0);
-  // currentStory: Хранит данные текущего выбранного трека
   const [currentStory, setCurrentStory] = useState(null);
-  // isPlayerOpen: Указывает, открыт ли полноэкранный плеер
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
-  // isMinimized: Указывает, свёрнут ли плеер в мини-версию
   const [isMinimized, setIsMinimized] = useState(false);
-  // showTherapyText: Указывает, показывать ли текст о сказкотерапии
-  const [showTherapyText, setShowTherapyText] = useState(false);
+  const [isTherapyModalOpen, setIsTherapyModalOpen] = useState(false); // Состояние для модального окна
 
   // Массив с данными о треках
   const stories = [
@@ -42,15 +34,15 @@ function App() {
 
   // Функция для воспроизведения выбранного трека
   const playStory = (storyId) => {
-    const story = stories.find(s => s.id === storyId); // Ищем трек по ID в массиве
+    const story = stories.find(s => s.id === storyId);
     if (story) {
-      setCurrentStory(story); // Устанавливаем текущий трек
-      setIsPlayerOpen(true); // Открываем полноэкранный плеер
-      setIsMinimized(false); // Убеждаемся, что плеер не свёрнут
+      setCurrentStory(story);
+      setIsPlayerOpen(true);
+      setIsMinimized(false);
       const audio = audioRef.current;
-      audio.src = story.url; // Устанавливаем источник аудио
-      audio.play().catch((error) => console.log('Ошибка воспроизведения аудио:', error)); // Запускаем воспроизведение с обработкой ошибок
-      setIsPlaying(true); // Устанавливаем статус "играет"
+      audio.src = story.url;
+      audio.play().catch((error) => console.log('Ошибка воспроизведения аудио:', error));
+      setIsPlaying(true);
     }
   };
 
@@ -58,61 +50,66 @@ function App() {
   const togglePlay = () => {
     const audio = audioRef.current;
     if (isPlaying) {
-      audio.pause(); // Ставим трек на паузу
+      audio.pause();
     } else {
-      audio.play().catch((error) => console.log('Ошибка воспроизведения аудио:', error)); // Возобновляем воспроизведение
+      audio.play().catch((error) => console.log('Ошибка воспроизведения аудио:', error));
     }
-    setIsPlaying(!isPlaying); // Переключаем статус
+    setIsPlaying(!isPlaying);
   };
 
   // Функция для перехода к предыдущему треку
   const playPrevious = () => {
     if (currentStory) {
-      const currentIndex = stories.findIndex(s => s.id === currentStory.id); // Находим индекс текущего трека
-      const previousIndex = (currentIndex - 1 + stories.length) % stories.length; // Переход к предыдущему (с зацикливанием)
-      playStory(stories[previousIndex].id); // Воспроизводим предыдущий трек
+      const currentIndex = stories.findIndex(s => s.id === currentStory.id);
+      const previousIndex = (currentIndex - 1 + stories.length) % stories.length;
+      playStory(stories[previousIndex].id);
     }
   };
 
   // Функция для перехода к следующему треку
   const playNext = () => {
     if (currentStory) {
-      const currentIndex = stories.findIndex(s => s.id === currentStory.id); // Находим индекс текущего трека
-      const nextIndex = (currentIndex + 1) % stories.length; // Переход к следующему (с зацикливанием)
-      playStory(stories[nextIndex].id); // Воспроизводим следующий трек
+      const currentIndex = stories.findIndex(s => s.id === currentStory.id);
+      const nextIndex = (currentIndex + 1) % stories.length;
+      playStory(stories[nextIndex].id);
     }
   };
 
   // Функция для сворачивания плеера
   const minimizePlayer = () => {
-    setIsMinimized(true); // Устанавливаем состояние свёрнутого плеера
+    setIsMinimized(true);
   };
 
   // Функция для разворачивания плеера
   const maximizePlayer = () => {
-    setIsMinimized(false); // Устанавливаем состояние развернутого плеера
+    setIsMinimized(false);
   };
 
   // Функция для закрытия плеера
   const closePlayer = () => {
     const audio = audioRef.current;
-    audio.pause(); // Останавливаем воспроизведение
-    setIsPlaying(false); // Сбрасываем статус воспроизведения
-    setCurrentStory(null); // Очищаем текущий трек
-    setIsPlayerOpen(false); // Закрываем плеер
-    setIsMinimized(false); // Сбрасываем состояние свёрнутости
+    audio.pause();
+    setIsPlaying(false);
+    setCurrentStory(null);
+    setIsPlayerOpen(false);
+    setIsMinimized(false);
   };
 
-  // Функция форматирования времени в формат "минуты:секунды"
+  // Функция форматирования времени
   const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60); // Вычисляем минуты
-    const secs = Math.floor(seconds % 60); // Вычисляем секунды
-    return `${mins}:${secs < 10 ? '0' + secs : secs}`; // Форматируем с ведущим нулем для секунд
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
   };
 
-  // Функция для переключения видимости текста о сказкотерапии
-  const toggleTherapyText = () => {
-    setShowTherapyText(!showTherapyText); // Переключаем состояние
+  // Функция для открытия модального окна
+  const openTherapyModal = () => {
+    setIsTherapyModalOpen(true);
+  };
+
+  // Функция для закрытия модального окна
+  const closeTherapyModal = () => {
+    setIsTherapyModalOpen(false);
   };
 
   return (
@@ -121,7 +118,7 @@ function App() {
       <div className="content-container">
         {activeTab === 'today' ? (
           <div className="main-content">
-            <h1 className="app-title">Не торопись</h1> {/* Статичный заголовок */}
+            <h1 className="app-title">Не торопись</h1>
             {stories.map((story) => (
               <div
                 key={story.id}
@@ -134,11 +131,11 @@ function App() {
                   <p className="story-author">By: {story.author}</p>
                 </div>
                 <button className="play-icon pulse">
-                  <FaPlay /> {/* Иконка Play для начала воспроизведения */}
+                  <FaPlay />
                 </button>
               </div>
             ))}
-            <div className="spacer"></div> {/* Пустой блок для прокрутки */}
+            <div className="spacer"></div>
           </div>
         ) : activeTab === 'sleep' ? (
           <div className="main-content">
@@ -148,27 +145,77 @@ function App() {
             </div>
             {/* Кнопки */}
             <div className="button-container">
-              <button className="sleep-button" onClick={toggleTherapyText}>
+              <button className="sleep-button" onClick={openTherapyModal}>
                 О сказкотерапии
               </button>
               <button className="sleep-button">
                 Полный доступ
               </button>
             </div>
-            {/* Текст о сказкотерапии (показывается при нажатии) */}
-            {showTherapyText && (
-              <div className="therapy-text">
-                <p>Здесь будет статья о сказкотерапии. Это заглушка.</p>
-              </div>
-            )}
           </div>
         ) : (
           <div className="main-content">
-            <h1 className="app-title">Профиль</h1> {/* Статичный заголовок для профиля */}
+            <h1 className="app-title">Профиль</h1>
             <p className="app-subtitle">Это твой профиль</p>
           </div>
         )}
       </div>
+
+      {/* Модальное окно для статьи "О сказкотерапии" */}
+      {isTherapyModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2 className="modal-title">О сказкотерапии</h2>
+              <button className="modal-close-button" onClick={closeTherapyModal}>
+                Закрыть
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Давайте разберёмся, почему взрослым стоит обратить внимание на эту полезную практику.</p>
+              <h3>1. Снятие стресса</h3>
+              <p>Сказки помогают отвлечься от повседневных забот и тревог, перенося вас в безопасный, воображаемый мир. Погружение в расслабляющий сюжет снижает уровень кортизола — гормона стресса.</p>
+              <p>Исследования показывают, что расслабление перед сном способствует более быстрому засыпанию и улучшает качество отдыха.</p>
+
+              <h3>2. Улучшение сна</h3>
+              <p>Когда наш мозг перегружен мыслями, заснуть становится трудно. Сказки действуют как своего рода "перезагрузка" — они отвлекают внимание от тревожных мыслей, помогая подготовить ум к отдыху.</p>
+              <p>Расслабляющие истории создают позитивный эмоциональный фон, который способствует более глубокому и качественному сну.</p>
+
+              <h3>3. Развитие воображения</h3>
+              <p>Воображение важно не только в детстве, но и во взрослой жизни. Слушая сказки, мы стимулируем работу мозга, развиваем креативность и поддерживаем когнитивные способности.</p>
+              <p>К тому же, исследования подтверждают, что регулярная работа с воображением помогает предотвращать возрастные изменения мозга.</p>
+
+              <h3>4. Эмоциональная разрядка</h3>
+              <p>Сказки вызывают у нас самые разные эмоции — радость, сострадание, волнение, облегчение. Это позволяет проживать и осознавать чувства, которые в повседневной жизни мы часто подавляем.</p>
+              <p>Рассказанные истории становятся своеобразным эмоциональным "психологом", позволяя освободиться от накопленного стресса.</p>
+
+              <h3>5. Поиск смысла</h3>
+              <p>Многие сказки содержат глубокие философские идеи. Размышления над сюжетами помогают понять себя, свои желания и мечты, а также найти новые подходы к решению жизненных задач.</p>
+
+              <h3>Научная основа</h3>
+              <p>Регулярное слушание или чтение историй перед сном — это не просто приятный ритуал. Наука подтверждает их пользу:</p>
+              <ul>
+                <li><strong>Борьба с бессонницей:</strong> Слушание сказок улучшает качество сна, помогая быстрее засыпать и реже просыпаться ночью.</li>
+                <li><strong>Снижение тревожности:</strong> Вымышленный мир временно вытесняет тревожные мысли, что снижает уровень стресса.</li>
+                <li><strong>Стимуляция мозга:</strong> Прослушивание историй укрепляет память, улучшает концентрацию и поддерживает когнитивные способности.</li>
+              </ul>
+
+              <h3>Как выбрать сказку для себя?</h3>
+              <p>Чтобы получить максимум удовольствия и пользы от прослушивания, обратите внимание на:</p>
+              <ul>
+                <li><strong>Сюжет:</strong> Выбирайте истории с добрым и расслабляющим посылом, чтобы они вызывали положительные эмоции.</li>
+                <li><strong>Язык:</strong> Лёгкий, понятный текст лучше всего подходит для подготовки ко сну.</li>
+                <li><strong>Длительность:</strong> История не должна быть слишком длинной — 10–20 минут достаточно, чтобы успокоить ум.</li>
+              </ul>
+
+              <h3>Почему стоит попробовать?</h3>
+              <p>Сказки перед сном — это не просто способ расслабиться, но и мощный инструмент для улучшения качества жизни. Они помогают справляться со стрессом, укрепляют умственные способности и дарят эмоциональное облегчение.</p>
+              <p>Добавьте сказки в свой вечерний ритуал, чтобы каждый день завершался на волшебной ноте. Кто знает, возможно, этот простой ритуал станет вашим любимым способом заботы о себе?</p>
+              <p>Если же проблемы со сном продолжаются, попробуйте воспользоваться телеграм-ботом "Маня". Она поможет расслабиться и быстрее заснуть!</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Полноэкранный плеер */}
       {isPlayerOpen && !isMinimized && (
@@ -239,28 +286,28 @@ function App() {
           className={`nav-button ${activeTab === 'today' ? 'active' : ''}`}
           onClick={() => setActiveTab('today')}
         >
-          <FaSun /> {/* Иконка солнца для вкладки "Сегодня" */}
+          <FaSun />
           <span>Сегодня</span>
         </button>
         <button
           className={`nav-button ${activeTab === 'sleep' ? 'active' : ''}`}
           onClick={() => setActiveTab('sleep')}
         >
-          <FaCloudMoon /> {/* Иконка луны для вкладки "Сон" */}
+          <FaCloudMoon />
           <span>Сон</span>
         </button>
         <button
           className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveTab('profile')}
         >
-          <FaUser /> {/* Иконка пользователя для вкладки профиля */}
-          <span>Профиль</span> {/* Статичное название */}
+          <FaUser />
+          <span>Профиль</span>
         </button>
       </div>
       <audio
         ref={audioRef}
-        onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)} // Обновляем текущее время при воспроизведении
-        onLoadedMetadata={() => setDuration(audioRef.current.duration)} // Устанавливаем длительность после загрузки метаданных
+        onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)}
+        onLoadedMetadata={() => setDuration(audioRef.current.duration)}
       />
     </div>
   );

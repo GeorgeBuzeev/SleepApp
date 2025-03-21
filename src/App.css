@@ -1,53 +1,52 @@
 /* Общий стиль для всего приложения */
 .app-container {
-  font-family: 'Inter', sans-serif; /* Используем шрифт Inter для минимализма */
-  background-color: #1A1F36; /* Тёмный фон в стиле Headspace */
-  color: #FFFFFF; /* Основной цвет текста */
-  min-height: 100vh; /* Полная высота экрана */
+  font-family: 'Inter', sans-serif;
+  background-color: #1A1F36;
+  color: #FFFFFF;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Вертикальная компоновка */
+  flex-direction: column;
 }
 
 /* Контейнер для основного контента */
 .content-container {
-  flex: 1; /* Занимает всё доступное пространство */
-  overflow-y: auto; /* Позволяет скроллить при необходимости */
-  padding: 20px; /* Внутренние отступы */
-  padding-top: 100px; /* Увеличенный отступ сверху для избежания наложения на панель Telegram */
-  padding-bottom: 100px; /* Увеличенный отступ снизу для избежания наложения на nav-bar */
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 .main-content {
-  max-width: 500px; /* Ограничиваем ширину для удобства */
-  margin: 0 auto; /* Центрируем контент */
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .app-title {
-  font-size: 28px; /* Размер заголовка */
-  font-weight: 700; /* Жирный шрифт */
-  text-align: center; /* Центрируем текст */
-  margin-bottom: 20px; /* Отступ снизу */
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .app-subtitle {
-  font-size: 16px; /* Размер подзаголовка */
-  color: #B0B3C1; /* Светло-серый цвет текста */
-  text-align: center; /* Центрируем текст */
-  margin-bottom: 20px; /* Отступ снизу */
+  font-size: 16px;
+  color: #B0B3C1;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 /* Шапка для вкладки "Сон" */
 .header-image {
   position: relative;
   width: 100%;
-  height: 200px; /* Высота шапки */
-  background: linear-gradient(135deg, #2E1A47, #4B2E83); /* Глубокий тёмный градиент */
-  border-radius: 16px; /* Закруглённые углы */
-  overflow: hidden; /* Скрываем элементы, выходящие за границы */
-  margin-bottom: 20px; /* Отступ снизу */
+  height: 200px;
+  background: linear-gradient(135deg, #2E1A47, #4B2E83);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-/* Декоративные элементы для шапки */
 .header-image::before,
 .header-image::after {
   content: '';
@@ -58,7 +57,7 @@
 .header-image::before {
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(255, 105, 180, 0.3), transparent); /* Полупрозрачный розовый круг */
+  background: radial-gradient(circle, rgba(255, 105, 180, 0.3), transparent);
   top: 20px;
   left: 20px;
 }
@@ -66,36 +65,34 @@
 .header-image::after {
   width: 60px;
   height: 60px;
-  background: radial-gradient(circle, rgba(147, 112, 219, 0.3), transparent); /* Полупрозрачный фиолетовый круг */
+  background: radial-gradient(circle, rgba(147, 112, 219, 0.3), transparent);
   bottom: 20px;
   right: 20px;
 }
 
-/* Линии и точки для эффекта */
 .header-image {
   background-image:
-    linear-gradient(45deg, transparent 25%, rgba(255, 105, 180, 0.1) 25%, rgba(255, 105, 180, 0.1) 50%, transparent 50%, transparent 75%, rgba(255, 105, 180, 0.1) 75%, rgba(255, 105, 180, 0.1)), /* Диагональные линии */
-    radial-gradient(circle, rgba(147, 112, 219, 0.2) 2px, transparent 2px); /* Точки */
-  background-size: 20px 20px, 10px 10px; /* Размер узоров */
+    linear-gradient(45deg, transparent 25%, rgba(255, 105, 180, 0.1) 25%, rgba(255, 105, 180, 0.1) 50%, transparent 50%, transparent 75%, rgba(255, 105, 180, 0.1) 75%, rgba(255, 105, 180, 0.1)),
+    radial-gradient(circle, rgba(147, 112, 219, 0.2) 2px, transparent 2px);
+  background-size: 20px 20px, 10px 10px;
 }
 
-/* Заголовок на шапке */
 .header-title {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Центрируем текст */
+  transform: translate(-50%, -50%);
   font-size: 28px;
   font-weight: 700;
   color: #FFFFFF;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Тень для читаемости */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Контейнер для кнопок */
 .button-container {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Отступ между кнопками */
+  gap: 12px;
 }
 
 /* Стили для кнопок на вкладке "Сон" */
@@ -103,308 +100,399 @@
   display: block;
   width: 100%;
   padding: 12px;
-  background-color: #F5C563; /* Цвет фона в стиле Headspace */
-  color: #1A1F36; /* Тёмный текст */
+  background-color: #F5C563;
+  color: #1A1F36;
   border: none;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
-  transition: background-color 0.3s ease; /* Плавное изменение цвета */
+  transition: background-color 0.3s ease;
 }
 
 .sleep-button:hover {
-  background-color: #E5B553; /* Более тёмный оттенок при наведении */
+  background-color: #E5B553;
 }
 
-/* Текст о сказкотерапии */
-.therapy-text {
-  margin-top: 20px;
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end; /* Выравниваем снизу */
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #2E3555;
+  width: 100%;
+  max-width: 500px;
+  height: 80vh; /* 80% высоты экрана */
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow-y: auto; /* Скролл внутри модального окна */
+  animation: slideUpModal 0.3s ease-out;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+/* Заголовок модального окна */
+.modal-header {
+  position: sticky;
+  top: 0;
+  background-color: #2E3555;
   padding: 16px;
-  background-color: #2E3555; /* Тёмный фон */
-  border-radius: 12px; /* Закруглённые углы */
-  color: #B0B3C1; /* Светло-серый текст */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  z-index: 1;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.modal-close-button {
+  background-color: #F28C38;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 12px;
   font-size: 14px;
-  line-height: 1.5; /* Улучшенная читаемость */
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.modal-close-button:hover {
+  opacity: 0.9;
+}
+
+/* Тело модального окна */
+.modal-body {
+  padding: 16px;
+  color: #B0B3C1;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-body p {
+  margin-bottom: 12px;
+}
+
+.modal-body ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+
+.modal-body li {
+  margin-bottom: 8px;
+}
+
+/* Анимация появления модального окна */
+@keyframes slideUpModal {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 /* Стили для карточек треков */
 .story-card {
-  display: flex; /* Гибкая компоновка */
-  align-items: center; /* Выравнивание по центру */
-  justify-content: space-between; /* Равномерное распределение */
-  background-color: #2E3555; /* Фон карточки */
-  border-radius: 12px; /* Закруглённые углы */
-  padding: 12px; /* Внутренние отступы */
-  margin-bottom: 12px; /* Отступ между карточками */
-  cursor: pointer; /* Указатель при наведении */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2E3555;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .story-card:hover {
-  background-color: #3A4266; /* Изменение цвета при наведении */
-  transform: scale(1.02); /* Лёгкое увеличение */
+  background-color: #3A4266;
+  transform: scale(1.02);
 }
 
 .story-cover {
-  width: 48px; /* Ширина обложки */
-  height: 48px; /* Высота обложки */
-  border-radius: 8px; /* Закруглённые углы */
-  margin-right: 12px; /* Отступ справа */
-  background-size: cover; /* Масштабирование фона */
-  background-position: center; /* Центрирование фона */
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  margin-right: 12px;
+  background-size: cover;
+  background-position: center;
 }
 
 .story-info {
-  flex: 1; /* Занимает всё доступное пространство */
+  flex: 1;
 }
 
 .story-title {
-  font-size: 16px; /* Размер текста */
-  font-weight: 600; /* Полужирный шрифт */
-  margin-bottom: 4px; /* Отступ снизу */
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .story-author {
-  font-size: 12px; /* Мелкий текст */
-  color: #B0B3C1; /* Светло-серый цвет */
+  font-size: 12px;
+  color: #B0B3C1;
 }
 
 .play-icon {
-  background: none; /* Без фона */
-  border: none; /* Без границ */
-  cursor: pointer; /* Указатель курсора */
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 /* Анимация пульсации для кнопок */
 .pulse {
-  animation: pulse 2s infinite ease-in-out; /* Бесконечная анимация пульсации */
+  animation: pulse 2s infinite ease-in-out;
 }
 
 @keyframes pulse {
   0% {
-    transform: scale(1); /* Исходный размер */
-    opacity: 1; /* Полная непрозрачность */
+    transform: scale(1);
+    opacity: 1;
   }
   50% {
-    transform: scale(1.1); /* Увеличение */
-    opacity: 0.7; /* Снижение прозрачности */
+    transform: scale(1.1);
+    opacity: 0.7;
   }
   100% {
-    transform: scale(1); /* Возврат к исходному */
-    opacity: 1; /* Полная непрозрачность */
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
 /* Полноэкранный плеер */
 .player-overlay {
-  position: fixed; /* Фиксированная позиция */
-  top: 0; /* Отступ сверху */
-  left: 0; /* Отступ слева */
-  right: 0; /* Отступ справа */
-  bottom: 0; /* Отступ снизу */
-  background-color: #1A1F36; /* Фон */
-  z-index: 1000; /* Высокий уровень наложения */
-  display: flex; /* Гибкая компоновка */
-  align-items: center; /* Выравнивание по центру */
-  justify-content: center; /* Центрирование */
-  animation: slideUp 0.3s ease-out; /* Анимация появления */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1A1F36;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: slideUp 0.3s ease-out;
 }
 
 .player-container {
-  text-align: center; /* Центрируем текст */
-  max-width: 400px; /* Максимальная ширина */
-  padding: 20px; /* Внутренние отступы */
+  text-align: center;
+  max-width: 400px;
+  padding: 20px;
 }
 
 .player-cover {
-  width: 200px; /* Ширина обложки */
-  height: 200px; /* Высота обложки */
-  border-radius: 16px; /* Закруглённые углы */
-  margin: 0 auto 20px; /* Центрирование и отступ снизу */
-  background-size: cover; /* Масштабирование фона */
-  background-position: center; /* Центрирование фона */
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  margin: 0 auto 20px;
+  background-size: cover;
+  background-position: center;
 }
 
 .player-title {
-  font-size: 20px; /* Размер текста */
-  font-weight: 600; /* Полужирный шрифт */
-  margin-bottom: 8px; /* Отступ снизу */
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .player-author {
-  font-size: 14px; /* Мелкий текст */
-  color: #B0B3C1; /* Светло-серый цвет */
-  margin-bottom: 20px; /* Отступ снизу */
+  font-size: 14px;
+  color: #B0B3C1;
+  margin-bottom: 20px;
 }
 
 .player-controls {
-  display: flex; /* Гибкая компоновка */
-  justify-content: center; /* Центрирование */
-  gap: 20px; /* Отступы между кнопками */
-  margin-bottom: 20px; /* Отступ снизу */
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .player-button {
-  background: none; /* Без фона */
-  border: none; /* Без границ */
-  cursor: pointer; /* Указатель курсора */
-  transition: transform 0.2s ease; /* Плавное изменение размера */
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .player-button:hover {
-  transform: scale(1.1); /* Увеличение при наведении */
+  transform: scale(1.1);
 }
 
 .time {
-  display: flex; /* Гибкая компоновка */
-  justify-content: space-between; /* Равномерное распределение */
-  font-size: 14px; /* Размер текста */
-  color: #B0B3C1; /* Светло-серый цвет */
-  margin-bottom: 10px; /* Отступ снизу */
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #B0B3C1;
+  margin-bottom: 10px;
 }
 
 .progress-bar {
-  width: 100%; /* Полная ширина */
-  height: 4px; /* Высота полосы */
-  background: #444; /* Цвет фона */
-  border-radius: 2px; /* Закруглённые углы */
-  position: relative; /* Относительное позиционирование */
+  width: 100%;
+  height: 4px;
+  background: #444;
+  border-radius: 2px;
+  position: relative;
 }
 
 .progress {
-  height: 100%; /* Полная высота */
-  background: #F5C563; /* Цвет прогресса */
-  border-radius: 2px; /* Закруглённые углы */
-  transition: width 0.1s linear; /* Плавное изменение ширины */
+  height: 100%;
+  background: #F5C563;
+  border-radius: 2px;
+  transition: width 0.1s linear;
 }
 
 .action-button {
-  display: flex; /* Гибкая компоновка */
-  align-items: center; /* Выравнивание по центру */
-  justify-content: center; /* Центрирование */
-  width: 80%; /* Ширина кнопки */
-  margin: 10px auto; /* Центрирование и отступы */
-  padding: 10px; /* Внутренние отступы */
-  border-radius: 12px; /* Закруглённые углы */
-  font-size: 14px; /* Размер текста */
-  font-weight: 600; /* Полужирный шрифт */
-  transition: background-color 0.3s ease; /* Плавное изменение цвета */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 .action-button.minimize {
-  background-color: #3A4266; /* Цвет фона для "Свернуть" */
-  color: #FFFFFF; /* Белый текст */
+  background-color: #3A4266;
+  color: #FFFFFF;
 }
 
 .action-button.close {
-  background-color: #F28C38; /* Цвет фона для "Закрыть" */
-  color: #FFFFFF; /* Белый текст */
+  background-color: #F28C38;
+  color: #FFFFFF;
 }
 
 .action-button:hover {
-  opacity: 0.9; /* Прозрачность при наведении */
+  opacity: 0.9;
 }
 
 /* Мини-плеер */
 .mini-player {
-  position: fixed; /* Фиксированная позиция */
-  bottom: 80px; /* Поднимаем выше, чтобы не перекрывать nav-bar */
-  left: 0; /* Слева */
-  right: 0; /* Справа */
-  background-color: #2E3555; /* Фон */
-  padding: 12px; /* Внутренние отступы */
-  display: flex; /* Гибкая компоновка */
-  align-items: center; /* Выравнивание по центру */
-  justify-content: space-between; /* Равномерное распределение */
-  z-index: 1000; /* Высокий уровень наложения */
-  animation: slideDown 0.3s ease-out; /* Анимация появления */
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  background-color: #2E3555;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
 }
 
 .mini-player-cover {
-  width: 40px; /* Ширина обложки */
-  height: 40px; /* Высота обложки */
-  border-radius: 8px; /* Закруглённые углы */
-  margin-right: 12px; /* Отступ справа */
-  background-size: cover; /* Масштабирование фона */
-  background-position: center; /* Центрирование фона */
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin-right: 12px;
+  background-size: cover;
+  background-position: center;
 }
 
 .mini-player-info {
-  flex: 1; /* Занимает всё доступное пространство */
+  flex: 1;
 }
 
 .mini-player-title {
-  font-size: 14px; /* Размер текста */
-  font-weight: 600; /* Полужирный шрифт */
-  margin-bottom: 4px; /* Отступ снизу */
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .mini-player-author {
-  font-size: 12px; /* Мелкий текст */
-  color: #B0B3C1; /* Светло-серый цвет */
+  font-size: 12px;
+  color: #B0B3C1;
 }
 
 .mini-player-controls {
-  display: flex; /* Гибкая компоновка */
-  gap: 12px; /* Отступы между кнопками */
+  display: flex;
+  gap: 12px;
 }
 
 /* Навигация */
 .nav-bar {
-  position: fixed; /* Фиксированная позиция */
-  bottom: 10px; /* Поднимаем выше, чтобы не перекрывать системные кнопки телефона */
-  left: 0; /* Слева */
-  right: 0; /* Справа */
-  background-color: #1A1F36; /* Фон */
-  display: flex; /* Гибкая компоновка */
-  justify-content: space-around; /* Равномерное распределение */
-  padding: 10px 0; /* Внешние отступы */
-  z-index: 100; /* Уровень наложения */
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  background-color: #1A1F36;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  z-index: 100;
 }
 
 .nav-button {
-  background: none; /* Без фона */
-  border: none; /* Без границ */
-  color: #B0B3C1; /* Светло-серый цвет */
-  font-size: 12px; /* Размер текста */
-  display: flex; /* Гибкая компоновка */
-  flex-direction: column; /* Вертикальное расположение */
-  align-items: center; /* Выравнивание по центру */
-  gap: 4px; /* Отступы между иконкой и текстом */
-  padding: 8px 16px; /* Внутренние отступы */
-  border-radius: 12px; /* Закруглённые углы */
-  transition: background-color 0.3s ease; /* Плавное изменение цвета */
+  background: none;
+  border: none;
+  color: #B0B3C1;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
 }
 
 .nav-button.active {
-  background-color: #3A4266; /* Цвет фона для активной вкладки */
-  color: #FFFFFF; /* Белый текст */
+  background-color: #3A4266;
+  color: #FFFFFF;
 }
 
 .nav-button svg {
-  font-size: 20px; /* Размер иконок */
+  font-size: 20px;
 }
 
 /* Анимации */
 @keyframes slideUp {
   from {
-    transform: translateY(100%); /* Начальная позиция снизу */
+    transform: translateY(100%);
   }
   to {
-    transform: translateY(0); /* Конечная позиция */
+    transform: translateY(0);
   }
 }
 
 @keyframes slideDown {
   from {
-    transform: translateY(0); /* Начальная позиция */
+    transform: translateY(0);
   }
   to {
-    transform: translateY(100%); /* Конечная позиция снизу */
+    transform: translateY(100%);
   }
 }
 
 /* Пустой блок для прокрутки */
 .spacer {
-  height: 80px; /* Высота для обеспечения прокрутки */
+  height: 80px;
 }
