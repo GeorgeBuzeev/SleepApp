@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlay, FaPause, FaMoon, FaSun, FaCloudMoon, FaArrowDown, FaArrowUp } from 'react-icons/fa'; // Импортируем иконки для интерфейса
+import { FaPlay, FaPause, FaSun, FaCloudMoon, FaArrowDown, FaArrowUp, FaUser } from 'react-icons/fa'; // Импортируем иконки для интерфейса
 import './App.css';
 
 function App() {
   // Состояния приложения
-  // activeTab: Определяет, какая вкладка активна ("today" или "sleep")
+  // activeTab: Определяет, какая вкладка активна ("today", "sleep" или "profile")
   const [activeTab, setActiveTab] = useState('today');
   // isPlaying: Указывает, воспроизводится ли трек в данный момент
   const [isPlaying, setIsPlaying] = useState(false);
@@ -18,6 +18,8 @@ function App() {
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   // isMinimized: Указывает, свёрнут ли плеер в мини-версию
   const [isMinimized, setIsMinimized] = useState(false);
+  // userName: Хранит имя пользователя из Telegram
+  const [userName, setUserName] = useState('Пользователь');
 
   // Массив с данными о треках
   const stories = [
@@ -29,12 +31,18 @@ function App() {
   // Ссылка на элемент аудио для управления воспроизведением
   const audioRef = React.useRef(null);
 
-  // Эффект для инициализации Telegram Mini App
+  // Эффект для инициализации Telegram Mini App и получения имени пользователя
   useEffect(() => {
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.ready(); // Готовим Telegram Web App
       window.Telegram.WebApp.expand(); // Расширяем окно приложения
       setTimeout(() => window.Telegram.WebApp.expand(), 100); // Повторяем расширение для надёжности
+
+      // Получаем данные пользователя из Telegram
+      const user = window.Telegram.WebApp.initDataUnsafe?.user;
+      if (user && user.first_name) {
+        setUserName(user.first_name); // Устанавливаем имя пользователя
+      }
     }
   }, []);
 
@@ -114,7 +122,7 @@ function App() {
       <div className="content-container">
         {activeTab === 'today' ? (
           <div className="main-content">
-            <h1 className="app-title">Сказки для сна</h1>
+            <h1 className="app-title">{userName}, не торопись</h1> {/* Заголовок с именем пользователя */}
             {stories.map((story) => (
               <div
                 key={story.id}
@@ -133,11 +141,16 @@ function App() {
             ))}
             <div className="spacer"></div> {/* Пустой блок для прокрутки */}
           </div>
-        ) : (
+        ) : activeTab === 'sleep' ? (
           <div className="main-content">
             <h1 className="app-title">Спокойный сон</h1>
             <p className="app-subtitle">Премиум-доступ к сказкам для лёгкого засыпания.</p>
             <button className="catalog-button">Каталог</button>
+          </div>
+        ) : (
+          <div className="main-content">
+            <h1 className="app-title">{userName}</h1> {/* Заголовок вкладки профиля */}
+            <p className="app-subtitle">Это твой профиль</p>
           </div>
         )}
       </div>
@@ -156,7 +169,7 @@ function App() {
                   <line x1="5" y1="4" x2="5" y2="20"/>
                 </svg>
               </button>
-              <button className="player-button play-button pulse" onClick={togglePlay}>
+              <button className="player-button play-button" onClick={togglePlay}>
                 {isPlaying ? <FaPause size={32} color="#F5C563" /> : <FaPlay size={32} color="#F5C563" />}
               </button>
               <button className="player-button" onClick={playNext}>
@@ -180,7 +193,7 @@ function App() {
               <FaArrowDown className="me-2" /> Свернуть
             </button>
             <button className="action-button close" onClick={closePlayer}>
-              Закрыть {/* Убрана иконка луны */}
+              Закрыть
             </button>
           </div>
         </div>
@@ -220,6 +233,13 @@ function App() {
         >
           <FaCloudMoon /> {/* Иконка луны для вкладки "Сон" */}
           <span>Сон</span>
+        </button>
+        <button
+          className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
+          onClick={() => setActiveTab('profile')}
+        >
+          <FaUser /> {/* Иконка пользователя для вкладки профиля */}
+          <span>{userName}</span>
         </button>
       </div>
       <audio
