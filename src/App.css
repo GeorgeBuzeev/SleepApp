@@ -36,22 +36,95 @@
   margin-bottom: 20px; /* Отступ снизу */
 }
 
-.catalog-button {
-  display: block; /* Блочный элемент */
-  width: 80%; /* Ширина кнопки */
-  margin: 0 auto; /* Центрируем */
-  padding: 12px; /* Внутренние отступы */
-  background-color: #F5C563; /* Цвет фона в стиле Headspace */
-  color: #1A1F36; /* Тёмный текст */
-  border: none; /* Без границ */
-  border-radius: 12px; /* Закруглённые углы */
-  font-size: 16px; /* Размер текста */
-  font-weight: 600; /* Полужирный шрифт */
-  transition: background-color 0.3s ease; /* Плавное изменение цвета при наведении */
+/* Шапка для вкладки "Сон" */
+.header-image {
+  position: relative;
+  width: 100%;
+  height: 200px; /* Высота шапки */
+  background: linear-gradient(135deg, #2E1A47, #4B2E83); /* Глубокий тёмный градиент */
+  border-radius: 16px; /* Закруглённые углы */
+  overflow: hidden; /* Скрываем элементы, выходящие за границы */
+  margin-bottom: 20px; /* Отступ снизу */
 }
 
-.catalog-button:hover {
+/* Декоративные элементы для шапки */
+.header-image::before,
+.header-image::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+.header-image::before {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(255, 105, 180, 0.3), transparent); /* Полупрозрачный розовый круг */
+  top: 20px;
+  left: 20px;
+}
+
+.header-image::after {
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, rgba(147, 112, 219, 0.3), transparent); /* Полупрозрачный фиолетовый круг */
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Линии и точки для эффекта */
+.header-image {
+  background-image:
+    linear-gradient(45deg, transparent 25%, rgba(255, 105, 180, 0.1) 25%, rgba(255, 105, 180, 0.1) 50%, transparent 50%, transparent 75%, rgba(255, 105, 180, 0.1) 75%, rgba(255, 105, 180, 0.1)), /* Диагональные линии */
+    radial-gradient(circle, rgba(147, 112, 219, 0.2) 2px, transparent 2px); /* Точки */
+  background-size: 20px 20px, 10px 10px; /* Размер узоров */
+}
+
+/* Заголовок на шапке */
+.header-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Центрируем текст */
+  font-size: 28px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Тень для читаемости */
+}
+
+/* Контейнер для кнопок */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Отступ между кнопками */
+}
+
+/* Стили для кнопок на вкладке "Сон" */
+.sleep-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #F5C563; /* Цвет фона в стиле Headspace */
+  color: #1A1F36; /* Тёмный текст */
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.sleep-button:hover {
   background-color: #E5B553; /* Более тёмный оттенок при наведении */
+}
+
+/* Текст о сказкотерапии */
+.therapy-text {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #2E3555; /* Тёмный фон */
+  border-radius: 12px; /* Закруглённые углы */
+  color: #B0B3C1; /* Светло-серый текст */
+  font-size: 14px;
+  line-height: 1.5; /* Улучшенная читаемость */
 }
 
 /* Стили для карточек треков */

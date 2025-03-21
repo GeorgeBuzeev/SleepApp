@@ -18,8 +18,8 @@ function App() {
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   // isMinimized: Указывает, свёрнут ли плеер в мини-версию
   const [isMinimized, setIsMinimized] = useState(false);
-  // userName: Хранит имя пользователя из Telegram
-  const [userName, setUserName] = useState('Гость'); // Запасное имя, если Telegram не вернёт данные
+  // showTherapyText: Указывает, показывать ли текст о сказкотерапии
+  const [showTherapyText, setShowTherapyText] = useState(false);
 
   // Массив с данными о треках
   const stories = [
@@ -31,23 +31,12 @@ function App() {
   // Ссылка на элемент аудио для управления воспроизведением
   const audioRef = React.useRef(null);
 
-  // Эффект для инициализации Telegram Mini App и получения имени пользователя
+  // Эффект для инициализации Telegram Mini App
   useEffect(() => {
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.ready(); // Готовим Telegram Web App
       window.Telegram.WebApp.expand(); // Расширяем окно приложения
       setTimeout(() => window.Telegram.WebApp.expand(), 100); // Повторяем расширение для надёжности
-
-      // Получаем данные пользователя из Telegram
-      const user = window.Telegram.WebApp.initDataUnsafe?.user;
-      console.log('Telegram User Data:', user); // Отладка: выводим данные пользователя в консоль
-      if (user && user.first_name) {
-        setUserName(user.first_name); // Устанавливаем имя пользователя
-      } else {
-        console.warn('Не удалось получить имя пользователя из Telegram, используется запасное имя "Гость"');
-      }
-    } else {
-      console.warn('Telegram Web App API недоступен, используется запасное имя "Гость"');
     }
   }, []);
 
@@ -121,13 +110,18 @@ function App() {
     return `${mins}:${secs < 10 ? '0' + secs : secs}`; // Форматируем с ведущим нулем для секунд
   };
 
+  // Функция для переключения видимости текста о сказкотерапии
+  const toggleTherapyText = () => {
+    setShowTherapyText(!showTherapyText); // Переключаем состояние
+  };
+
   return (
     <div className="app-container">
       {/* Основной контейнер для контента */}
       <div className="content-container">
         {activeTab === 'today' ? (
           <div className="main-content">
-            <h1 className="app-title">{userName}, не торопись</h1> {/* Заголовок с именем пользователя */}
+            <h1 className="app-title">Не торопись</h1> {/* Статичный заголовок */}
             {stories.map((story) => (
               <div
                 key={story.id}
@@ -148,13 +142,29 @@ function App() {
           </div>
         ) : activeTab === 'sleep' ? (
           <div className="main-content">
-            <h1 className="app-title">Спокойный сон</h1>
-            <p className="app-subtitle">Премиум-доступ к сказкам для лёгкого засыпания.</p>
-            <button className="catalog-button">Каталог</button>
+            {/* Шапка с декоративным фоном */}
+            <div className="header-image">
+              <h1 className="header-title">Рассказы для сна</h1>
+            </div>
+            {/* Кнопки */}
+            <div className="button-container">
+              <button className="sleep-button" onClick={toggleTherapyText}>
+                О сказкотерапии
+              </button>
+              <button className="sleep-button">
+                Полный доступ
+              </button>
+            </div>
+            {/* Текст о сказкотерапии (показывается при нажатии) */}
+            {showTherapyText && (
+              <div className="therapy-text">
+                <p>Здесь будет статья о сказкотерапии. Это заглушка.</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="main-content">
-            <h1 className="app-title">{userName}</h1> {/* Заголовок вкладки профиля */}
+            <h1 className="app-title">Профиль</h1> {/* Статичный заголовок для профиля */}
             <p className="app-subtitle">Это твой профиль</p>
           </div>
         )}
@@ -244,7 +254,7 @@ function App() {
           onClick={() => setActiveTab('profile')}
         >
           <FaUser /> {/* Иконка пользователя для вкладки профиля */}
-          <span>{userName}</span>
+          <span>Профиль</span> {/* Статичное название */}
         </button>
       </div>
       <audio
