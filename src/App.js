@@ -24,19 +24,26 @@ function App() {
   const audioRef = React.useRef(null);
 
   // Получаем Telegram ID пользователя
-  const [userId, setUserId] = useState(null);
   useEffect(() => {
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.ready();
-      window.Telegram.WebApp.expand();
-      setTimeout(() => window.Telegram.WebApp.expand(), 100);
-      const user = window.Telegram.WebApp.initDataUnsafe.user;
-      if (user) {
-        setUserId(user.id);
-        checkSubscription(user.id); // Проверяем статус подписки при загрузке
-      }
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+    setTimeout(() => window.Telegram.WebApp.expand(), 100);
+    const user = window.Telegram.WebApp.initDataUnsafe.user;
+    if (user) {
+      setUserId(user.id);
+      checkSubscription(user.id);
+    } else {
+      console.error('Не удалось получить userId из Telegram');
+      setUserId(12345); // Тестовый userId
+      checkSubscription(12345);
     }
-  }, []);
+  } else {
+    console.warn('Telegram WebApp API недоступен, используем тестовый userId');
+    setUserId(12345); // Тестовый userId
+    checkSubscription(12345);
+  }
+}, []);
 
   // Функция для проверки статуса подписки
   const checkSubscription = async (userId) => {

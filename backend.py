@@ -2,7 +2,11 @@ import json
 import sqlite3
 import datetime
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from yookassa import Configuration, Payment
+
+app = Flask(__name__)
+CORS(app)  # Разрешаем CORS для всех маршрутов
 
 # Конфигурация ЮKassa (тестовые данные, на проде замени на реальные)
 SHOP_ID = '448544'
@@ -37,6 +41,7 @@ conn.commit()
 # Функция для создания платежа (переиспользуем твою)
 def create_payment(value, description):
     try:
+        print(f"Создаём платёж: value={value}, description={description}")
         payment = Payment.create({
             "amount": {
                 "value": value,
@@ -70,7 +75,9 @@ def create_payment(value, description):
                 ]
             }
         })
-        return json.loads(payment.json())
+        payment_data = json.loads(payment.json())
+        print(f"Платёж создан: {payment_data}")
+        return payment_data
     except Exception as e:
         print(f"Ошибка при создании платежа: {str(e)}")
         return None
