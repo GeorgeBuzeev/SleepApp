@@ -11,9 +11,10 @@ function App() {
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isTherapyModalOpen, setIsTherapyModalOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false); // Состояние для модального окна оплаты
-  const [hasSubscription, setHasSubscription] = useState(false); // Состояние подписки
-  const [subscriptionEnd, setSubscriptionEnd] = useState(null); // Дата окончания подписки
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
+  const [subscriptionEnd, setSubscriptionEnd] = useState(null);
+  const [userId, setUserId] = useState(null); // Объявляем userId и setUserId
 
   const stories = [
     { id: 'george_camp', title: 'Путешествие в лагерь', author: 'Джордж', url: 'https://raw.githubusercontent.com/GeorgeBuzeev/TestManya/main/Рассказ Джорджа - Путешествие в лагерь.mp3', coverGradient: 'linear-gradient(135deg, #F5C563, #E5989B)' },
@@ -23,29 +24,27 @@ function App() {
 
   const audioRef = React.useRef(null);
 
-  // Получаем Telegram ID пользователя
   useEffect(() => {
-  if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.ready();
-    window.Telegram.WebApp.expand();
-    setTimeout(() => window.Telegram.WebApp.expand(), 100);
-    const user = window.Telegram.WebApp.initDataUnsafe.user;
-    if (user) {
-      setUserId(user.id);
-      checkSubscription(user.id);
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+      setTimeout(() => window.Telegram.WebApp.expand(), 100);
+      const user = window.Telegram.WebApp.initDataUnsafe.user;
+      if (user) {
+        setUserId(user.id);
+        checkSubscription(user.id);
+      } else {
+        console.error('Не удалось получить userId из Telegram');
+        setUserId(12345);
+        checkSubscription(12345);
+      }
     } else {
-      console.error('Не удалось получить userId из Telegram');
-      setUserId(12345); // Тестовый userId
+      console.warn('Telegram WebApp API недоступен, используем тестовый userId');
+      setUserId(12345);
       checkSubscription(12345);
     }
-  } else {
-    console.warn('Telegram WebApp API недоступен, используем тестовый userId');
-    setUserId(12345); // Тестовый userId
-    checkSubscription(12345);
-  }
-}, []);
+  }, []);
 
-  // Функция для проверки статуса подписки
   const checkSubscription = async (userId) => {
     try {
       const response = await fetch(`http://localhost:5000/check-subscription?user_id=${userId}`);
@@ -135,9 +134,9 @@ function App() {
     setIsPaymentModalOpen(false);
   };
 
-  // Функция для создания платежа
   const handlePayment = async (plan) => {
     try {
+      console.log('Отправляем запрос:', { user_id: userId, plan: plan });
       const response = await fetch('http://localhost:5000/create-payment', {
         method: 'POST',
         headers: {
@@ -145,12 +144,11 @@ function App() {
         },
         body: JSON.stringify({
           user_id: userId,
-          plan: plan, // "30days" или "365days"
+          plan: plan,
         }),
       });
       const data = await response.json();
       if (data.confirmation_url) {
-        // Перенаправляем пользователя на страницу оплаты
         window.location.href = data.confirmation_url;
       } else {
         alert('Ошибка при создании платежа. Попробуйте снова.');
@@ -161,14 +159,13 @@ function App() {
     }
   };
 
-  // Периодическая проверка статуса подписки после оплаты
   useEffect(() => {
     if (isPaymentModalOpen) {
       const interval = setInterval(() => {
         if (userId) {
           checkSubscription(userId);
         }
-      }, 5000); // Проверяем каждые 5 секунд
+      }, 5000);
       return () => clearInterval(interval);
     }
   }, [isPaymentModalOpen, userId]);
@@ -225,7 +222,6 @@ function App() {
         )}
       </div>
 
-      {/* Модальное окно для статьи "О сказкотерапии" */}
       {isTherapyModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -240,47 +236,11 @@ function App() {
               <h3>1. Снятие стресса</h3>
               <p>Сказки помогают отвлечься от повседневных забот и тревог, перенося вас в безопасный, воображаемый мир. Погружение в расслабляющий сюжет снижает уровень кортизола — гормона стресса.</p>
               <p>Исследования показывают, что расслабление перед сном способствует более быстрому засыпанию и улучшает качество отдыха.</p>
-
-              <h3>2. Улучшение сна</h3>
-              <p>Когда наш мозг перегружен мыслями, заснуть становится трудно. Сказки действуют как своего рода "перезагрузка" — они отвлекают внимание от тревожных мыслей, помогая подготовить ум к отдыху.</p>
-              <p>Расслабляющие истории создают позитивный эмоциональный фон, который способствует более глубокому и качественному сну.</p>
-
-              <h3>3. Развитие воображения</h3>
-              <p>Воображение важно не только в детстве, но и во взрослой жизни. Слушая сказки, мы стимулируем работу мозга, развиваем креативность и поддерживаем когнитивные способности.</p>
-              <p>К тому же, исследования подтверждают, что регулярная работа с воображением помогает предотвращать возрастные изменения мозга.</p>
-
-              <h3>4. Эмоциональная разрядка</h3>
-              <p>Сказки вызывают у нас самые разные эмоции — радость, сострадание, волнение, облегчение. Это позволяет проживать и осознавать чувства, которые в повседневной жизни мы часто подавляем.</p>
-              <p>Рассказанные истории становятся своеобразным эмоциональным "психологом", позволяя освободиться от накопленного стресса.</p>
-
-              <h3>5. Поиск смысла</h3>
-              <p>Многие сказки содержат глубокие философские идеи. Размышления над сюжетами помогают понять себя, свои желания и мечты, а также найти новые подходы к решению жизненных задач.</p>
-
-              <h3>Научная основа</h3>
-              <p>Регулярное слушание или чтение историй перед сном — это не просто приятный ритуал. Наука подтверждает их пользу:</p>
-              <ul>
-                <li><strong>Борьба с бессонницей:</strong> Слушание сказок улучшает качество сна, помогая быстрее засыпать и реже просыпаться ночью.</li>
-                <li><strong>Снижение тревожности:</strong> Вымышленный мир временно вытесняет тревожные мысли, что снижает уровень стресса.</li>
-                <li><strong>Стимуляция мозга:</strong> Прослушивание историй укрепляет память, улучшает концентрацию и поддерживает когнитивные способности.</li>
-              </ul>
-
-              <h3>Как выбрать сказку для себя?</h3>
-              <p>Чтобы получить максимум удовольствия и пользы от прослушивания, обратите внимание на:</p>
-              <ul>
-                <li><strong>Сюжет:</strong> Выбирайте истории с добрым и расслабляющим посылом, чтобы они вызывали положительные эмоции.</li>
-                <li><strong>Язык:</strong> Лёгкий, понятный текст лучше всего подходит для подготовки ко сну.</li>
-                <li><strong>Длительность:</strong> История не должна быть слишком длинной — 10–20 минут достаточно, чтобы успокоить ум.</li>
-              </ul>
-
-              <h3>Почему стоит попробовать?</h3>
-              <p>Сказки перед сном — это не просто способ расслабиться, но и мощный инструмент для улучшения качества жизни. Они помогают справляться со стрессом, укрепляют умственные способности и дарят эмоциональное облегчение.</p>
-              <p>Добавьте сказки в свой вечерний ритуал, чтобы каждый день завершался на волшебной ноте. Кто знает, возможно, этот простой ритуал станет вашим любимым способом заботы о себе?</p>
-              <p>Если же проблемы со сном продолжаются, попробуйте воспользоваться телеграм-ботом "Маня". Она поможет расслабиться и быстрее заснуть!</p>
             </div>
           </div>
         </div>
       )}
-      {/* Модальное окно для оплаты */}
+
       {isPaymentModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -320,7 +280,6 @@ function App() {
         </div>
       )}
 
-      {/* Полноэкранный плеер */}
       {isPlayerOpen && !isMinimized && (
         <div className="player-overlay">
           <div className="player-container">
@@ -364,7 +323,6 @@ function App() {
         </div>
       )}
 
-      {/* Мини-плеер */}
       {isPlayerOpen && isMinimized && (
         <div className="mini-player">
           <div className="mini-player-cover" style={{ background: currentStory.coverGradient }}></div>
