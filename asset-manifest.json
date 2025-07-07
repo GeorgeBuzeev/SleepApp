@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/SleepApp/static/css/main.d8eae49e.css",
-    "main.js": "/SleepApp/static/js/main.55f694d1.js",
+    "main.css": "/SleepApp/static/css/main.28a8f4f4.css",
+    "main.js": "/SleepApp/static/js/main.b5076200.js",
     "static/js/453.e79265ad.chunk.js": "/SleepApp/static/js/453.e79265ad.chunk.js",
     "index.html": "/SleepApp/index.html",
-    "main.d8eae49e.css.map": "/SleepApp/static/css/main.d8eae49e.css.map",
-    "main.55f694d1.js.map": "/SleepApp/static/js/main.55f694d1.js.map",
+    "main.28a8f4f4.css.map": "/SleepApp/static/css/main.28a8f4f4.css.map",
+    "main.b5076200.js.map": "/SleepApp/static/js/main.b5076200.js.map",
     "453.e79265ad.chunk.js.map": "/SleepApp/static/js/453.e79265ad.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d8eae49e.css",
-    "static/js/main.55f694d1.js"
+    "static/css/main.28a8f4f4.css",
+    "static/js/main.b5076200.js"
   ]
 }
